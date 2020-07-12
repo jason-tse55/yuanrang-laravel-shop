@@ -16,5 +16,12 @@
         "psr-4": {
             "Yuanrang\\LaravelShop\\": "src"
         }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Yuanrang\\LaravelShop\\Wap\\Member\\Providers\\MemberServiceProviders"
+            ]
+        }
     }
 }
