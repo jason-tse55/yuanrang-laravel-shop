@@ -1,6 +1,6 @@
 {
-    "name": "yuanrang\/laravel-shop",
-    "description": "this is a Laravel Shop",
+    "name": "yuanrang\/laravel-shop-wap-member",
+    "description": "Package description here.",
     "license": "MIT",
     "authors": [
         {
@@ -8,13 +8,10 @@
             "email": "jason_tse55@163.com"
         }
     ],
-    "replace": {
-        "yuanrang/laravel-shop-wap-member": "self.version"
-    },
     "require": {},
     "autoload": {
         "psr-4": {
-            "Yuanrang\\LaravelShop\\": "src"
+            "Yuanrang\\LaravelShop\\Wap\\Member\\": "./src/Wap/Member/"
         }
     }
 }
