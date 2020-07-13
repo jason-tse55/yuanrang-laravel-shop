@@ -15,6 +15,9 @@ class MemberServiceProviders extends ServiceProvider
 
     protected $middlewareGroups = [];
 
+    protected $command = [
+        \Yuanrang\LaravelShop\Wap\Member\Console\Commands\installCommand::class
+    ];
     /**
      * Register any application services.
      *
@@ -43,6 +46,9 @@ class MemberServiceProviders extends ServiceProvider
     public function boot()
     {
         $this->loadMemberAuthConfig();
+
+        $this->commands($this->command);
+
         $this->loadViewsFrom(
             __DIR__ . '/../Resources/Views', 'view'
         );
