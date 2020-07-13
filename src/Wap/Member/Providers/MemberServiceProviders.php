@@ -15,7 +15,6 @@ class MemberServiceProviders extends ServiceProvider
 
     protected $middlewareGroups = [];
 
-
     /**
      * Register any application services.
      *
@@ -23,7 +22,6 @@ class MemberServiceProviders extends ServiceProvider
      */
     public function register()
     {
-        //
 //        注册组件路由
         $this->registerRoutes();
 
@@ -32,6 +30,9 @@ class MemberServiceProviders extends ServiceProvider
 
 //        根据配置文件去加载路由中间件文件
         $this->registerRouteMiddleware();
+
+        $this->registerPublishing();
+        $this->loadMigrationsFrom(__DIR__. '/../Database/migrations');
     }
 
     /**
@@ -42,14 +43,36 @@ class MemberServiceProviders extends ServiceProvider
     public function boot()
     {
         $this->loadMemberAuthConfig();
-        //
         $this->loadViewsFrom(
             __DIR__ . '/../Resources/Views', 'view'
         );
     }
 
+    protected function registerPublishing()
+    {
+        if ($this->app->runningInConsole()) {
+            //                  [当前组件的配置文件路径 =》 这个配置复制那个目录] , 文件标识
+            // 1. 不填就是默认的地址 config_path 的路径 发布配置文件名不会改变
+            // 2. 不带后缀就是一个文件夹
+            // 3. 如果是一个后缀就是一个文件
+            $this->publishes([__DIR__.'/../Config' => config_path('wap')], 'laravel-shop-wap-member-config');
+        }
+    }
+
+    protected function loadMigrationsFrom($path)
+    {
+        if ($this->app->runningInConsole()) {
+            $this->callAfterResolving('migrator', function ($migrator) use ($path) {
+                $migrator->path($path);
+            });
+        }
+    }
+
     protected function loadMemberAuthConfig()
     {
+        // Arr 基础操方法封装
+        // 这个数组合并之后，一定要再此保持laravel项目中
+//        config(Arr::dot(config('wap.member.official_account', []), 'wechat.official_account.'));
         config(Arr::dot(config('wap.member.auth', []), 'auth.'));
     }
 
@@ -64,7 +87,7 @@ class MemberServiceProviders extends ServiceProvider
         }
     }
 
-    private function routeConfiguration()
+    protected function routeConfiguration()
     {
         return [
 //            定义路由的命名空间
@@ -76,7 +99,7 @@ class MemberServiceProviders extends ServiceProvider
         ];
     }
 
-    private function registerRoutes()
+    protected function registerRoutes()
     {
         Route::group($this->routeConfiguration(), function () {
             $this->loadRoutesFrom(__DIR__ . '/../Http/routes.php');
